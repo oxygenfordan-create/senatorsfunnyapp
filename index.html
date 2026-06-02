@@ -331,12 +331,27 @@
         const downloadPhotoBtn = document.getElementById('download-photo-btn');
         const renderCanvas = document.getElementById('render-canvas');
 
+        senatorFaceImg.onerror = () => {
+            if (selectedSenator) {
+                senatorFaceImg.src = avatarFallbackDataUrl(selectedSenator.initial || selectedSenator.name.substring(0, 2));
+            }
+        };
+        activeOverlay.onerror = () => {
+            activeOverlay.style.opacity = '0';
+        };
+
         let currentStream = null, currentFacingMode = "user", globalBlob = null, photoDownloadUrl = null;
         let selectedSenator = null, selectedQuote = null, selectedDecoration = null, isFourCutMode = false;
         let stampsArray = [];
 
         function getRandomQuote(quotes) {
             return quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
+        function avatarFallbackDataUrl(text, fill = '#dcaf64', bg = '#0b0b14') {
+            const label = text.slice(0, 2).toUpperCase();
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="${bg}"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="72" font-weight="800" fill="${fill}">${label}</text></svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
         }
 
         function processLiveFrameLoop() {
@@ -407,10 +422,22 @@
             senatorList.forEach(sen => {
                 const item = document.createElement('div');
                 item.className = "flex-shrink-0 w-14 h-14 rounded-xl glass-panel overflow-hidden flex flex-col items-center justify-center cursor-pointer border border-[#dcaf64]/20 hover:border-[#dcaf64]/60 transition active:scale-95 relative bg-black/40";
-                item.innerHTML = `
-                    <img src="${sen.url}" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition" alt="${sen.name}">
-                    <div class="absolute bottom-0 inset-x-0 bg-black/80 text-[8px] font-medium text-center truncate px-0.5 text-[#dcaf64]">${sen.name}</div>
-                `;
+
+                const thumb = document.createElement('img');
+                thumb.src = sen.url;
+                thumb.alt = sen.name;
+                thumb.className = "w-full h-full object-cover opacity-80 hover:opacity-100 transition";
+                thumb.loading = 'lazy';
+                thumb.onerror = () => {
+                    thumb.src = avatarFallbackDataUrl(sen.initial || sen.name.substring(0, 2));
+                };
+
+                const label = document.createElement('div');
+                label.className = "absolute bottom-0 inset-x-0 bg-black/80 text-[8px] font-medium text-center truncate px-0.5 text-[#dcaf64]";
+                label.innerText = sen.name;
+
+                item.appendChild(thumb);
+                item.appendChild(label);
                 item.addEventListener('click', () => {
                     selectedSenator = sen;
                     selectedQuote = getRandomQuote(sen.quotes);
