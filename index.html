@@ -31,15 +31,11 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        video, canvas#live-canvas { transition: filter 0.2s linear; }
-        .quote-banner { text-shadow: 0 0 10px rgba(220, 175, 100, 0.5); }
-
-        @keyframes gavel-shake {
-            0%, 100% { transform: rotate(0deg); }
-            20%, 60% { transform: rotate(-6deg); }
-            40%, 80% { transform: rotate(6deg); }
+        canvas#live-canvas { transition: filter 0.2s linear; }
+        .quote-banner { 
+            text-shadow: 0 0 10px rgba(220, 175, 100, 0.5);
+            transition: all 0.1s ease;
         }
-        .shake-hover:hover { animation: gavel-shake 0.4s ease infinite; }
         
         .camera-stamp {
             position: absolute;
@@ -48,13 +44,26 @@
             pointer-events: none;
             transform: translate(-50%, -50%);
             z-index: 15;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
         }
-        .senator-face-card {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(8, 7, 17, 0.78);
-            border: 1px solid rgba(220, 175, 100, 0.2);
+        
+        .senator-avatar-card {
+            background: #111122;
+            border: 2px solid rgba(220, 175, 100, 0.2);
+            transition: all 0.2s ease;
+        }
+        .senator-avatar-card:hover {
+            border-color: rgba(220, 175, 100, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .dice-rolling {
+            animation: text-flicker 0.1s infinite alternate;
+            opacity: 0.7;
+            scale: 0.98;
+        }
+        @keyframes text-flicker {
+            from { transform: translateY(-1px); filter: brightness(1.2); }
+            to { transform: translateY(1px); filter: brightness(0.8); }
         }
     </style>
 </head>
@@ -95,32 +104,20 @@
             <div id="stamps-layer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
 
             <div id="tv-watermark" class="absolute top-4 left-4 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded tracking-widest uppercase z-10 opacity-0 transition-opacity duration-300">
-                🔴 LIVE: SENATE HEARING
-            </div>
-            <div id="senator-face-panel" class="absolute top-4 right-4 w-24 p-2 rounded-3xl senator-face-card flex flex-col items-center gap-2 opacity-0 transition-opacity duration-300 z-10">
-                <img id="senator-face-img" src="" class="w-16 h-16 rounded-full object-cover border border-[#dcaf64]/30" alt="Selected Senator">
-                <span id="senator-face-name" class="text-[9px] uppercase tracking-[0.22em] text-[#dcaf64] text-center leading-tight">SELECTED</span>
+                🔴 LIVE: CONG. / SENATE HEARING
             </div>
 
             <div id="countdown-overlay" class="absolute inset-0 flex items-center justify-center text-6xl font-bold tracking-widest text-[#dcaf64] bg-black/50 backdrop-blur-xs hidden z-30">3</div>
 
-            <div class="absolute bottom-20 left-4 right-4 text-center pointer-events-none z-10">
-                <span id="live-quote-banner" class="quote-banner text-[11px] tracking-wide font-semibold text-[#dcaf64] uppercase px-4 py-2 rounded-xl bg-black/70 backdrop-blur-sm border border-[#dcaf64]/20 block min-h-[34px]">
-                    ⚠️ PLENARY SESSION OPEN ⚠️
+            <div id="roll-trigger-zone" class="absolute bottom-16 left-4 right-4 text-center z-10 cursor-pointer" title="I-roll ang One-Liner Dice!">
+                <span id="live-quote-banner" class="quote-banner text-[10px] tracking-wide font-bold text-[#dcaf64] uppercase px-4 py-2.5 rounded-xl bg-black/90 backdrop-blur-sm border-2 border-dashed border-[#dcaf64]/40 block min-h-[46px] flex items-center justify-center text-center">
+                    🎲 PINDU_TIN PARA MAG-ROLL NG SUBPOENA QUOTE 🎲
                 </span>
-            </div>
-
-            <div class="absolute bottom-4 left-4 w-1/4 h-1/4 pointer-events-none z-10 flex items-end justify-start">
-                <img id="item-overlay" src="" class="max-w-full max-h-full object-contain opacity-0 transition-all duration-300" alt="Meme Item">
-            </div>
-
-            <div class="absolute bottom-4 right-4 w-1/3 h-1/3 pointer-events-none z-10 flex items-end justify-end">
-                <img id="active-overlay" src="" class="max-w-full max-h-full object-contain opacity-0 transition-all duration-300" alt="Senator Overlay">
             </div>
 
             <div id="error-state" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center hidden bg-slate-950/90">
                 <i data-lucide="video-off" class="w-8 h-8 text-[#dcaf64]/50 mb-2"></i>
-                <p class="text-xs text-[#dcaf64]/80 tracking-wide">Please allow the camera to start...</p>
+                <p class="text-xs text-[#dcaf64]/80 tracking-wide">Paki-allow ang camera para makapagsimula...</p>
             </div>
         </div>
     </main>
@@ -130,52 +127,44 @@
         <div class="w-full glass-panel rounded-2xl p-3 flex flex-col gap-2 mb-1">
             <div class="flex items-center justify-between text-[10px] tracking-widest text-[#dcaf64] uppercase">
                 <span><i data-lucide="sliders" class="w-3 h-3 inline mr-1"></i> Timpla ng Video & Kalbo Adjuster</span>
-                <div class="flex items-center gap-2">
-                    <span id="gacha-btn" class="shake-hover cursor-pointer px-2 py-0.5 rounded bg-[#dcaf64]/20 border border-[#dcaf64]/40 flex items-center gap-1 text-[9px] text-white">
-                        🏛️ I-Cite in Contempt! (Random)
-                    </span>
-                    <span id="quote-generator-btn" class="shake-hover cursor-pointer px-2 py-0.5 rounded bg-[#dcaf64]/20 border border-[#dcaf64]/40 flex items-center gap-1 text-[9px] text-white">
-                        🎤 One-Liner ng Senado
-                    </span>
-                </div>
+                <span id="gacha-btn" class="cursor-pointer px-2 py-0.5 rounded bg-[#dcaf64]/20 border border-[#dcaf64]/40 flex items-center gap-1 text-[9px] text-white">
+                    🎲 Roll Random Quote!
+                </span>
             </div>
             <div class="grid grid-cols-2 gap-x-4 gap-y-1">
                 <div class="flex items-center gap-2">
-                    <span class="text-[9px] text-slate-400 w-12">Blur</span>
+                    <span class="text-[9px] text-slate-400 w-12">Linao/Blur</span>
                     <input id="slider-blur" type="range" min="0" max="2" step="0.1" value="0.4" class="w-full accent-[#dcaf64] h-1 bg-white/10 rounded-lg appearance-none">
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-[9px] text-slate-400 w-12">Brightness</span>
+                    <span class="text-[9px] text-slate-400 w-12">Liwanag</span>
                     <input id="slider-bright" type="range" min="0.8" max="1.3" step="0.02" value="1.02" class="w-full accent-[#dcaf64] h-1 bg-white/10 rounded-lg appearance-none">
                 </div>
                 <div class="flex items-center gap-2 col-span-2 mt-1 pt-1 border-t border-white/5">
-                    <span class="text-[9px] text-amber-400 font-bold w-24">Bald Size:</span>
+                    <span class="text-[9px] text-amber-400 font-bold w-24">Laki ng Kalbo:</span>
                     <input id="slider-bald" type="range" min="30" max="130" step="1" value="75" class="w-full accent-amber-500 h-1 bg-white/10 rounded-lg appearance-none">
                 </div>
             </div>
         </div>
 
-        <span class="text-[9px] tracking-widest text-[#dcaf64]/60 uppercase pl-1">Evidence & Props (Tap, then click screen to stamp)</span>
+        <span class="text-[9px] tracking-widest text-[#dcaf64]/60 uppercase pl-1">Props & Stamps (Pindutin, sabay i-tap ang video area)</span>
         <div id="item-selector" class="w-full flex gap-2 overflow-x-auto no-scrollbar pb-1 px-1"></div>
 
-        <span class="text-[9px] tracking-widest text-[#dcaf64]/60 uppercase pl-1">Choose your Presiding Senator (Select Bato for the bald effect!)</span>
+        <span class="text-[9px] tracking-widest text-[#dcaf64]/60 uppercase pl-1">Presiding Senator Filter</span>
         <div id="senator-selector" class="w-full flex gap-2 overflow-x-auto no-scrollbar pb-1 px-1"></div>
 
         <div class="w-full glass-panel rounded-3xl p-3 flex items-center justify-between mt-1">
-            <button id="clear-frame-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-rose-300/60 hover:text-rose-400 transition" title="Clear all">
+            <button id="clear-frame-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-rose-300/60 hover:text-rose-400 transition" title="Burahin ang lahat">
                 <i data-lucide="ban" class="w-4 h-4"></i>
             </button>
 
-            <div class="flex flex-col items-center gap-1">
-                <button id="capture-btn" class="gavel-btn w-14 h-14 rounded-full flex items-center justify-center" title="Capture photo and save it" aria-label="Capture photo">
-                    <div class="w-10 h-10 rounded-full border border-[#dcaf64]/20 flex items-center justify-center">
-                        <i data-lucide="camera" class="w-4 h-4 text-[#dcaf64]"></i>
-                    </div>
-                </button>
-                <span class="text-[8px] uppercase tracking-[0.2em] text-[#dcaf64]">Take Photo</span>
-            </div>
+            <button id="capture-btn" class="gavel-btn w-14 h-14 rounded-full flex items-center justify-center" title="Paluin ang Gavel (Kumuha ng Larawan & Lock Quote)">
+                <div class="w-10 h-10 rounded-full border border-[#dcaf64]/20 flex items-center justify-center">
+                    <i data-lucide="gavel" class="w-4 h-4 text-[#dcaf64]"></i>
+                </div>
+            </button>
 
-            <button id="album-toggle-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-[#dcaf64] relative" title="Open photo vault">
+            <button id="album-toggle-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-[#dcaf64] relative" title="Buksan ang Vault">
                 <i data-lucide="folder-lock" class="w-4 h-4"></i>
                 <div id="album-badge" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 hidden"></div>
             </button>
@@ -192,12 +181,12 @@
                 <p class="text-xs text-slate-500 text-center col-span-2 py-10">Walang nakuhang ebidensya.</p>
             </div>
             <div class="w-full pt-4">
-                <button id="clear-album-btn" class="w-full py-2.5 text-xs text-rose-400 border border-rose-500/20 bg-rose-500/5 rounded-xl uppercase tracking-widest">Clear All Captures</button>
+                <button id="clear-album-btn" class="w-full py-2.5 text-xs text-rose-400 border border-rose-500/20 bg-rose-500/5 rounded-xl uppercase tracking-widest">Burahin Lahat ng Transcripts</button>
             </div>
         </div>
     </div>
 
-    <div id="preview-modal" class="fixed inset-0 bg-black/85 backdrop-blur-xl z-50 flex flex-col items-center justify-center p-6 hidden">
+    <div id="preview-modal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex flex-col items-center justify-center p-6 hidden">
         <div class="glass-panel p-4 rounded-3xl max-w-sm w-full flex flex-col items-center gap-3">
             <h3 class="text-xs tracking-widest text-[#dcaf64] uppercase font-bold">🚨 NA-CITE IN CONTEMPT!</h3>
             
@@ -206,14 +195,14 @@
             </div>
 
             <p class="text-[9px] text-center text-slate-400 px-2 tracking-wide">
-                💡 <b>Mobile Tip:</b> If the download button does not work, long-press the photo to save it to your gallery.
+                💡 <b>Tip sa Mobile:</b> Pindutin at **i-hold nang matagal** ang larawan sa itaas upang direktang mai-save sa iyong gallery.
             </p>
 
-            <button id="download-photo-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#dcaf64]/30 to-[#dcaf64]/10 border border-[#dcaf64]/50 text-xs font-semibold tracking-widest text-[#dcaf64] uppercase hover:brightness-110 transition flex items-center justify-center gap-2 shadow-lg">
-                <i data-lucide="share-2" class="w-4 h-4"></i> Save or Share Photo
+            <button id="download-photo-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#dcaf64]/40 to-[#dcaf64]/10 border border-[#dcaf64]/60 text-xs font-semibold tracking-widest text-[#dcaf64] uppercase hover:brightness-110 transition flex items-center justify-center gap-2 shadow-lg">
+                <i data-lucide="share-2" class="w-4 h-4"></i> I-SAVE O I-SHARE ANG LARAWAN
             </button>
             <button id="close-modal-btn" class="w-full py-2 rounded-xl bg-white/5 border border-white/10 text-xs tracking-wider uppercase text-slate-400 hover:text-white transition">
-                Back to Chamber
+                Order! Order! (Bumalik)
             </button>
         </div>
     </div>
@@ -232,46 +221,52 @@
                 osc.start(); osc.stop(audioCtx.currentTime + duration);
             } catch(e){}
         }
-        function playChime() { playTone(440, 'sine', 0.08); playTone(554, 'sine', 0.08); }
+        function playChime() { playTone(587, 'sine', 0.06); playTone(880, 'sine', 0.08); }
         function playGavelStrike() { playTone(85, 'triangle', 0.3, 0.5); playTone(150, 'triangle', 0.1, 0.2); }
+        function playDiceTick() { playTone(900, 'sine', 0.01, 0.03); }
 
+        const funnyDiceQuotes = [
+            "She may not like my answer... but I am answering.",
+            "Skin me alive, burn me, you will find me unbowed.",
+            "I will not allow myself to be subjected to an inquiry based on an empty speech.",
+            "Raoul Manuel.",
+            "If I get killed, go kill BBM, Liza, and Romualdez. No joke.",
+            "Huhukayin ko 'yang tatay n'yo, itatapon ko sa West Philippine Sea.",
+            "I am the designated survivor.",
+            "Ako si Inday Sara, isang botanteng natatakot para sa ating kinabukasan.",
+            "Joseipino shukran.",
+            "I offer my life... I cannot kneel before every Filipino to beg for forgiveness.",
+            "Sige lang, paborito niyo naman ako.",
+            "I deal with facts. Can you speak Tagalog?",
+            "Mr. Witness, wag mo kaming paikutin.",
+            "May resibo ako dito. Hindi ka pwedeng magtago.",
+            "Aanhin niyo ba ang research?",
+            "*BUDOTS DANCE INTENSIFIES*",
+            "Selfie muna bago mag-serbisyo!",
+            "Your honor, hindi ko na po maalala...",
+            "Nakalimutan ko po dahil sa trauma.",
+            "Bakit may subdivision sa gitna ng farm?!",
+            "Excuse me, hindi kita tinatanong!"
+        ];
+
+        // FIXED: Ginamitan ng Base64 Inline SVG Data Images para zero network fetching at 100% immune sa Vercel CORS restrictions!
         const senatorList = [
-            { id: 'bato', name: 'Bato', tint: 'contrast(1.15) brightness(1.05)', glow: '#ef4444', url: '', quotes: ["Sige lang, paborito niyo naman ako.", "Walang mahirap kung may ficha paper.", "Ako na bahala sa impeachment.", "Gulong-kadena o mic-check, laban lang.", "Sino bumoto? Ayan may record."] },
-            { id: 'robin', name: 'Robin', tint: 'sepia(0.15) saturate(1.2)', glow: '#eab308', url: '', quotes: ["I deal with facts. Can you speak Tagalog?", "Magtanong ka sa batas, hindi sa tsismis.", "Hindi ako artista, senador ako.", "Mag-usap tayo sa mga dokumento at hindi sa drama."] },
-            { id: 'risa', name: 'Risa', tint: 'brightness(1.02) saturate(1.05)', glow: '#a855f7', url: '', quotes: ["Mr. Witness, wag mo kaming paikutin.", "May committee hearing kami sa tita mo.", "Hindi ito tungkol sa pruweba, kundi sa konsensiya.", "Kung may pruweba, hilingin mo ngayon."] },
-            { id: 'trillanes', name: 'Trillanes', tint: 'contrast(1.15) grayscale(0.1)', glow: '#3b82f6', url: '', quotes: ["May resibo ako dito. Hindi ka pwedeng magtago.", "I-verify natin yan with one paper.", "Kailangang may transparency, hindi drama.", "Type 'accountability' sa comments."] },
-            { id: 'villar_c', name: 'Cynthia', tint: 'saturate(1.25)', glow: '#22c55e', url: '', quotes: ["Aanhin niyo ba ang research?", "Sabi ng datos, hindi gimik.", "Isang tanong: research o resibo?"] },
-            { id: 'revilla', name: 'Bong Revilla', tint: 'hue-rotate(15deg) contrast(1.05)', glow: '#ec4899', url: '', quotes: ["*BUDOTS DANCE INTENSIFIES*", "Sinigaw na 'Pilipinas, Checheche'!", "Action star mode activated."] },
-            { id: 'bonggo', name: 'Bong Go', tint: 'brightness(1.05) saturate(0.95)', glow: '#06b6d4', url: '', quotes: ["Selfie muna bago mag-serbisyo!", "Public service, tapos selfie.", "Iwasan ang fake news, pero selfie yes."] },
-            { id: 'bam', name: 'Bam Aquino', tint: 'contrast(1.08) saturate(1.1)', glow: '#f97316', url: '', quotes: ["Edukasyon at resibo ang sagot.", "Hindi sapat ang press conference, may syllabus dapat.", "Ang tunay na reform, may lesson plan."] },
-            { id: 'erwin', name: 'Erwin Tulfo', tint: 'contrast(1.2) brightness(1.02)', glow: '#b91c1c', url: '', quotes: ["Isusumbong kita sa Senado!", "Mayroon kang 48 hours to explain.", "Walang mahirap na usapin sa radyo at plenaryo."] },
-            { id: 'kiko', name: 'Kiko', tint: 'sepia(0.05) saturate(1.05)', glow: '#15803d', url: '', quotes: ["Ipaglaban ang magsasaka at ang batas!", "Sa Senado dapat may malasakit at matibay na argumento.", "Boses ng agraryo, boses ng bayan."] },
-            { id: 'marcoleta', name: 'Marcoleta', tint: 'contrast(1.15) brightness(0.98)', glow: '#7c2d12', url: '', quotes: ["I object! This is standard procedure!", "Ngayon ipapaliwanag mo yan sa plenaryo.", "Question, objection, motion accepted."] },
-            { id: 'lacson', name: 'Ping Lacson', tint: 'grayscale(0.15) contrast(1.1)', glow: '#64748b', url: '', quotes: ["Walang pork barrel kahit isang sentimo.", "Resibo sa kape, resibo sa proyekto.", "May bago akong tanong: nasa dokumento ba yan?"] },
-            { id: 'sotto', name: 'Tito Sotto', tint: 'sepia(0.1) brightness(1.02)', glow: '#b45309', url: '', quotes: ["Wanbol University system checking in.", "May quiz sa Senado, handa ka na ba?", "Trending na ang hearing na 'to."] },
-            { id: 'pia', name: 'Pia Cayetano', tint: 'brightness(1.04) saturate(1.02)', glow: '#db2777', url: '', quotes: ["Let's stick to the legal frameworks.", "Neutral ang vlogger, seryoso ang Senado.", "Batas muna, viral later."] },
-            { id: 'villar_cam', name: 'Camille V.', tint: 'saturate(1.2) brightness(1.05)', glow: '#10b981', url: '', quotes: ["Ingat at tagumpay para sa lahat.", "Ang reporting ay para sa susunod na henerasyon.", "Magsalita ng may malasakit at ebidensya."] },
-            { id: 'litolapid', name: 'Lito Lapid', tint: 'contrast(1.1) hue-rotate(-5deg)', glow: '#ca8a04', url: '', quotes: ["*Tinitigan nang malupit sa action movie*", "Hawak ko ang bala, hindi tsismis.", "Ready na akong mag-punch-out ng fake news."] },
-            { id: 'imee', name: 'Imee Marcos', tint: 'saturate(1.15) brightness(1.03)', glow: '#dc2626', url: '', quotes: ["Ako ang manang ninyong tagapagtanggol.", "Sa Senado may araw ng debate, hindi parade.", "Umasa kayo sa manang problem solver."] },
-            { id: 'alanpeter', name: 'Alan Peter C.', tint: 'contrast(1.05) saturate(1.05)', glow: '#2563eb', url: '', quotes: ["Saan napunta ang 10k na ayuda?", "May follow-up question: kanino ibinigay?", "Hindi pwedeng 'di mo alam ang sagot."] },
-            { id: 'loren', name: 'Loren Legarda', tint: 'brightness(1.02) saturate(1.1)', glow: '#0d9488', url: '', quotes: ["Alagaan ang kalikasan at kultura!", "Kung may agrikultura, may kinabukasan.", "Narito ako para sa bayan at kalikasan."] },
-            { id: 'chiz', name: 'Chiz Escudero', tint: 'contrast(1.08) brightness(1.02)', glow: '#4f46e5', url: '', quotes: ["Sa madaling salita, aksyon ang kailangan.", "Hindi sapat ang kasiyahan, kailangan ng plano.", "May tama ang tanong. May sagot ba? "] },
-            { id: 'jv', name: 'JV Ejercito', tint: 'saturate(1.1) brightness(1.04)', glow: '#ea580c', url: '', quotes: ["The Good One is back on track.", "Sige, ipakita natin ang good governance.", "May serbisyo, may sipag, may saya."] },
-            { id: 'markvillar', name: 'Mark Villar', tint: 'saturate(1.05) brightness(1.01)', glow: '#16a34a', url: '', quotes: ["Build, build, build pa ng pictures!", "Project proposal, tapos picture pa.", "Infrastructure meeting, selfie ready."] },
-            { id: 'sara', name: 'VP Sara', tint: 'contrast(1.12) saturate(1.1)', glow: '#f97316', url: '', quotes: ["Basta, may order ang barangay!", "May sariling roadmap ako, may sariling nakatayo!", "Di ako nagpa-preno sa public service. Pinapaandar ko pa!", "May pinakamabilis na pila sa bayan, andyan ako."] },
-            { id: 'bbm', name: 'President Bongbong', tint: 'brightness(1.1) saturate(1.08)', glow: '#dc2626', url: '', quotes: ["Build, build, build, build, build... plus one more build!", "May unity, may glory, may production value.", "Huwag kayong mag-worry, may budget pa sa meme department.", "May bagong banner na wala pa sa Instagram."] },
-            { id: 'raffy', name: 'Raffy Tulfo', tint: 'contrast(1.2) saturation(1.15)', glow: '#e11d48', url: '', quotes: ["I-marites natin 'yan live sa radyo!", "May publike duty, may radyo commentary.", "Kailangan ng buong hustisya, hindi tsismis lang."] },
-            { id: 'win', name: 'Win Gatchalian', tint: 'brightness(1.02) saturate(1.05)', glow: '#0284c7', url: '', quotes: ["Tingnan natin ang micro data checks.", "Hindi lang dapat macro, pati micro din.", "May spreadsheet at may sundalo ng facts."] },
-            { id: 'joel', name: 'Joel V.', tint: 'saturate(1.1) contrast(1.05)', glow: '#f59e0b', url: '', quotes: ["Trabaho at TESDA para sa bawat Pilipino!", "Skill training dapat kasama sa budget.", "Bilang senador, may tutok sa kabuhayan."] },
-            { id: 'migz', name: 'Migz Zubiri', tint: 'contrast(1.06) brightness(1.02)', glow: '#475569', url: '', quotes: ["Order in the plenary chamber, please!", "May dalawang minuto ka lang sa tanong.", "Pakinggan muna natin ang full report."] }
+            { id: 'sara', name: 'Inday S.', tint: 'contrast(1.2) hue-rotate(-5deg)', glow: '#22c55e', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231e3a1e"/><circle cx="50" cy="40" r="22" fill="%23d1a87b"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%23153015"/><text x="50" y="45" font-family="sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">🦅 VP</text></svg>' },
+            { id: 'bato', name: 'Bato', tint: 'contrast(1.15) brightness(1.05)', glow: '#ef4444', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234c0519"/><circle cx="50" cy="40" r="22" fill="%23e0bb95"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%232d0612"/><text x="50" y="45" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🧑‍🦲 BATO</text></svg>' },
+            { id: 'robin', name: 'Robin', tint: 'sepia(0.15) saturate(1.2)', glow: '#eab308', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23451a03"/><circle cx="50" cy="40" r="22" fill="%23c49a6c"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%23270e02"/><text x="50" y="45" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🎬 RBN</text></svg>' },
+            { id: 'risa', name: 'Risa', tint: 'brightness(1.02) saturate(1.05)', glow: '#a855f7', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232e1065"/><circle cx="50" cy="40" r="22" fill="%23eac49e"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%231e0b36"/><text x="50" y="45" font-family="sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">⚖️ RISA</text></svg>' },
+            { id: 'trillanes', name: 'Trillanes', tint: 'contrast(1.15) grayscale(0.1)', glow: '#3b82f6', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23062863"/><circle cx="50" cy="40" r="22" fill="%23d6b085"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%2303173d"/><text x="50" y="45" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🗂️ TRIL</text></svg>' },
+            { id: 'villar_c', name: 'Cynthia', tint: 'saturate(1.25)', glow: '#10b981', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23042f1a"/><circle cx="50" cy="40" r="22" fill="%23dfbfa0"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%2302190e"/><text x="50" y="45" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🌾 CYN</text></svg>' },
+            { id: 'revilla', name: 'Bong', tint: 'hue-rotate(15deg) contrast(1.05)', glow: '#ec4899', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%235c0632"/><circle cx="50" cy="40" r="22" fill="%23cc9e78"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%233b021f"/><text x="50" y="45" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🕺 BONG</text></svg>' },
+            { id: 'bonggo', name: 'Bong Go', tint: 'brightness(1.05) saturate(0.95)', glow: '#06b6d4', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23083344"/><circle cx="50" cy="40" r="22" fill="%23d6ad85"/><path d="M20 85c0-15 12-25 30-25s30 10 30 25z" fill="%23041d26"/><text x="50" y="45" font-family="sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">🤳 BG</text></svg>' }
         ];
 
         const itemList = [
-            { id: 'comb', name: 'Sukat Buhok', url: '' },
-            { id: 'folder', name: 'Folder ng Resibo', url: '' },
-            { id: 'gavel', name: 'Gavel ng Batas', url: '' },
-            { id: 'tissue', name: 'Tissue Punas Luha', url: '' },
-            { id: 'house', name: 'Subdivision House', url: '' }
+            { id: 'gavel', emoji: '🔨', text: 'Gavel' },
+            { id: 'folder', emoji: '📁', text: 'Resibo' },
+            { id: 'book', emoji: '📚', text: 'Kaibigan' },
+            { id: 'tissue', emoji: '🧻', text: 'Tissue' },
+            { id: 'house', emoji: '🏠', text: 'Lupa' }
         ];
 
         const video = document.getElementById('camera-stream');
@@ -279,11 +274,10 @@
         const liveCtx = liveCanvas.getContext('2d');
         const cameraContainer = document.getElementById('camera-container');
         const errorState = document.getElementById('error-state');
-        const activeOverlay = document.getElementById('active-overlay');
-        const itemOverlay = document.getElementById('item-overlay');
         const stampsLayer = document.getElementById('stamps-layer');
         const countdownOverlay = document.getElementById('countdown-overlay');
         const liveQuoteBanner = document.getElementById('live-quote-banner');
+        const rollTriggerZone = document.getElementById('roll-trigger-zone');
         const tvWatermark = document.getElementById('tv-watermark');
         
         const selectorContainer = document.getElementById('senator-selector');
@@ -292,7 +286,6 @@
         const flipBtn = document.getElementById('flip-btn');
         const clearBtn = document.getElementById('clear-frame-btn');
         const gachaBtn = document.getElementById('gacha-btn');
-        const quoteGeneratorBtn = document.getElementById('quote-generator-btn');
         const modeToggleBtn = document.getElementById('mode-toggle-btn');
         const modeText = document.getElementById('mode-text');
         
@@ -302,28 +295,10 @@
         
         const albumToggleBtn = document.getElementById('album-toggle-btn');
         const albumDrawer = document.getElementById('album-drawer');
-        const senateOneLiners = [
-            "Kumusta ang resibo ng kape?",
-            "May kasamang dokumento ba yan?",
-            "Resibo, hindi receipt.",
-            "Naka-subpoena selfie.",
-            "May public service announcement ako.",
-            "Bago mag-salita, may due diligence ka na?",
-            "Hindi tsismis ang dapat mamayani, kundi ang ebidensya.",
-            "May tanong ako, at may follow-up na susunod.",
-            "Pakinggan natin ang buong kuwento bago mag-react.",
-            "Senador kami, hindi influencer.",
-            "Sino may hawak ng resibo?",
-            "May agenda pa si Vice, check mo.",
-            "Paki-latag ang dokumento, hindi ang kwento lang."
-        ];
         const closeAlbumBtn = document.getElementById('close-album-btn');
         const albumGrid = document.getElementById('album-grid');
         const clearAlbumBtn = document.getElementById('clear-album-btn');
         const albumBadge = document.getElementById('album-badge');
-        const senatorFacePanel = document.getElementById('senator-face-panel');
-        const senatorFaceImg = document.getElementById('senator-face-img');
-        const senatorFaceName = document.getElementById('senator-face-name');
 
         const previewModal = document.getElementById('preview-modal');
         const modalImage = document.getElementById('modal-image');
@@ -331,61 +306,13 @@
         const downloadPhotoBtn = document.getElementById('download-photo-btn');
         const renderCanvas = document.getElementById('render-canvas');
 
-        senatorFaceImg.onerror = () => {
-            if (selectedSenator) {
-                senatorFaceImg.src = avatarFallbackDataUrl(selectedSenator.initial || selectedSenator.name.substring(0, 2));
-            }
-        };
-        activeOverlay.onerror = () => {
-            if (selectedSenator) {
-                activeOverlay.src = avatarFallbackDataUrl(selectedSenator.initial || selectedSenator.name.substring(0, 2));
-                activeOverlay.style.opacity = '0.9';
-            } else {
-                activeOverlay.style.opacity = '0';
-            }
-        };
-
-        let currentStream = null, currentFacingMode = "user", globalBlob = null, photoDownloadUrl = null;
-        let selectedSenator = null, selectedQuote = null, selectedDecoration = null, isFourCutMode = false;
+        let currentStream = null, currentFacingMode = "user", globalBlob = null;
+        let selectedSenator = null, selectedDecoration = null, isFourCutMode = false;
         let stampsArray = [];
-
-        function getRandomQuote(quotes) {
-            return quotes[Math.floor(Math.random() * quotes.length)];
-        }
-
-        function avatarFallbackDataUrl(text, fill = '#dcaf64', bg = '#0b0b14') {
-            const label = text.slice(0, 2).toUpperCase();
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="${bg}"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="72" font-weight="800" fill="${fill}">${label}</text></svg>`;
-            return `data:image/svg+xml;base64,${btoa(svg)}`;
-        }
-
-        function senatorPlaceholderUrl(name, size = 150) {
-            const initials = (name || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-            return avatarFallbackDataUrl(initials || name.substring(0, 2));
-        }
-
-        function getSenatorImageUrl(senator) {
-            return senator.url || senatorPlaceholderUrl(senator.name, 150);
-        }
-
-        function itemPlaceholderDataUrl(item) {
-            const icons = {
-                comb: '🪮',
-                folder: '📁',
-                gavel: '🔨',
-                tissue: '🧻',
-                house: '🏠'
-            };
-            const icon = icons[item.id] || item.name.slice(0, 2).toUpperCase();
-            const bg = '#111827';
-            const fill = '#dcaf64';
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="${bg}"/><text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="96" fill="${fill}">${icon}</text><text x="50%" y="90%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" fill="#ffffff">${item.name}</text></svg>`;
-            return `data:image/svg+xml;base64,${btoa(svg)}`;
-        }
-
-        function getItemImageUrl(item) {
-            return item.url || itemPlaceholderDataUrl(item);
-        }
+        let currentActiveQuote = "🎲 TAP ME OR PRESS GAVEL TO ROLL QUOTE 🎲";
+        let isDiceRolling = false;
+        
+        const imageCache = {};
 
         function processLiveFrameLoop() {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -407,11 +334,12 @@
                 liveCtx.restore();
                 liveCtx.filter = "none";
 
+                // Bato Bald Head Filter Effect
                 if (selectedSenator && selectedSenator.id === 'bato') {
                     const cx = liveCanvas.width / 2;
-                    const cy = liveCanvas.height * 0.38;
-                    const rx = parseInt(baldSlider.value);
-                    const ry = rx * 1.15;
+                    const cy = liveCanvas.height * 0.35; 
+                    const rx = parseInt(baldSlider.value); 
+                    const ry = rx * 1.15; 
 
                     liveCtx.save();
                     let baldGrad = liveCtx.createRadialGradient(cx, cy - (ry*0.2), rx * 0.2, cx, cy, rx);
@@ -427,16 +355,84 @@
                     liveCtx.fill();
                     liveCtx.restore();
                 }
+
+                // Live Camera Frame Badge Overlays
+                if (selectedSenator) {
+                    liveCtx.save();
+                    liveCtx.fillStyle = "rgba(12, 10, 20, 0.85)";
+                    liveCtx.fillRect(liveCanvas.width - 125, liveCanvas.height - 155, 105, 135);
+                    liveCtx.strokeStyle = selectedSenator.glow;
+                    liveCtx.lineWidth = 2;
+                    liveCtx.strokeRect(liveCanvas.width - 125, liveCanvas.height - 155, 105, 135);
+                    
+                    const cachedImg = imageCache[selectedSenator.id];
+                    if (cachedImg && cachedImg.complete) {
+                        liveCtx.drawImage(cachedImg, liveCanvas.width - 117, liveCanvas.height - 147, 90, 100);
+                    }
+                    
+                    liveCtx.font = "bold 10px sans-serif";
+                    liveCtx.fillStyle = "#dcaf64";
+                    liveCtx.textAlign = "center";
+                    liveCtx.fillText(selectedSenator.name.toUpperCase(), liveCanvas.width - 72, liveCanvas.height - 32);
+                    liveCtx.restore();
+                }
             }
             requestAnimationFrame(processLiveFrameLoop);
         }
 
+        function triggerDiceQuoteRoll(callback) {
+            if (isDiceRolling) return;
+            isDiceRolling = true;
+            liveQuoteBanner.classList.remove('animate-pulse');
+            liveQuoteBanner.classList.add('dice-rolling');
+            tvWatermark.style.opacity = "1";
+
+            let iterations = 0;
+            const maxIterations = 14;
+            
+            const rollInterval = setInterval(() => {
+                const tempQuote = funnyDiceQuotes[Math.floor(Math.random() * funnyDiceQuotes.length)];
+                liveQuoteBanner.innerText = `🎲 "${tempQuote.toUpperCase()}"`;
+                playDiceTick();
+                iterations++;
+
+                if (iterations >= maxIterations) {
+                    clearInterval(rollInterval);
+                    currentActiveQuote = funnyDiceQuotes[Math.floor(Math.random() * funnyDiceQuotes.length)];
+                    liveQuoteBanner.innerText = `🚨 "${currentActiveQuote.toUpperCase()}"`;
+                    liveQuoteBanner.classList.remove('dice-rolling');
+                    isDiceRolling = false;
+                    playChime();
+                    if(callback) callback();
+                }
+            }, 75);
+        }
+
+        rollTriggerZone.addEventListener('click', () => triggerDiceQuoteRoll());
+        gachaBtn.addEventListener('click', () => {
+            triggerDiceQuoteRoll();
+            const randSen = senatorList[Math.floor(Math.random() * senatorList.length)];
+            applySenatorFilter(randSen);
+        });
+
+        function applySenatorFilter(sen) {
+            selectedSenator = sen;
+            document.getElementById('status-orb').style.backgroundColor = sen.glow;
+            cameraContainer.style.boxShadow = `0 0 30px ${sen.glow}30, inset 0 0 20px ${sen.glow}10`;
+            
+            document.querySelectorAll('.senator-avatar-card').forEach(c => c.style.borderColor = 'rgba(220, 175, 100, 0.2)');
+            const activeCard = document.getElementById(`sen-card-${sen.id}`);
+            if(activeCard) activeCard.style.borderColor = sen.glow;
+        }
+
         cameraContainer.addEventListener('click', (e) => {
+            if (e.clientY > rollTriggerZone.getBoundingClientRect().top) return;
             if(!selectedDecoration) return;
+            
             const rect = cameraContainer.getBoundingClientRect();
             const pctX = (e.clientX - rect.left) / rect.width;
             const pctY = (e.clientY - rect.top) / rect.height;
-            stampsArray.push({ url: getItemImageUrl(selectedDecoration), x: pctX, y: pctY });
+            stampsArray.push({ emoji: selectedDecoration.emoji, x: pctX, y: pctY });
             renderStampsUI();
             playTone(350, 'sine', 0.04, 0.05);
         });
@@ -444,102 +440,48 @@
         function renderStampsUI() {
             stampsLayer.innerHTML = "";
             stampsArray.forEach(stamp => {
-                const img = document.createElement('img');
-                img.src = stamp.url; img.className = "camera-stamp";
-                img.style.left = `${stamp.x * 100}%`; img.style.top = `${stamp.y * 100}%`;
-                stampsLayer.appendChild(img);
+                const el = document.createElement('div');
+                el.className = "camera-stamp flex items-center justify-center text-3xl select-none";
+                el.style.left = `${stamp.x * 100}%`; el.style.top = `${stamp.y * 100}%`;
+                el.innerText = stamp.emoji;
+                stampsLayer.appendChild(el);
             });
         }
 
         function initSelectors() {
+            selectorContainer.innerHTML = "";
             senatorList.forEach(sen => {
-                const item = document.createElement('div');
-                item.className = "senator-avatar-card flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden flex flex-col items-center justify-center cursor-pointer border border-[#dcaf64]/20 hover:border-[#dcaf64]/60 transition active:scale-95 relative bg-black/40";
+                const imgObj = new Image();
+                imgObj.src = sen.img;
+                imageCache[sen.id] = imgObj;
 
-                const thumb = document.createElement('img');
-                thumb.src = getSenatorImageUrl(sen);
-                thumb.alt = sen.name;
-                thumb.className = "w-full h-full object-cover opacity-80 hover:opacity-100 transition";
-                thumb.loading = 'lazy';
-                thumb.onerror = () => {
-                    thumb.src = avatarFallbackDataUrl(sen.initial || sen.name.substring(0, 2));
-                };
-
-                const label = document.createElement('div');
-                label.className = "absolute bottom-0 inset-x-0 bg-black/80 text-[8px] font-medium text-center truncate px-0.5 text-[#dcaf64]";
-                label.innerText = sen.name;
-
-                item.appendChild(thumb);
-                item.appendChild(label);
-                item.addEventListener('click', () => {
-                    selectedSenator = sen;
-                    selectedQuote = getRandomQuote(sen.quotes);
-                    const senatorImage = getSenatorImageUrl(sen);
-                    activeOverlay.src = senatorImage; activeOverlay.style.opacity = "0.9";
-                    senatorFaceImg.src = senatorImage;
-                    senatorFaceName.innerText = sen.name;
-                    senatorFacePanel.style.opacity = "1";
-                    liveQuoteBanner.innerText = `"${selectedQuote}"`;
-                    tvWatermark.style.opacity = "1";
-                    document.getElementById('status-orb').style.backgroundColor = sen.glow;
-                    cameraContainer.style.boxShadow = `0 0 30px ${sen.glow}20, inset 0 0 20px ${sen.glow}08`;
-                    playChime();
+                const card = document.createElement('div');
+                card.id = `sen-card-${sen.id}`;
+                card.className = "senator-avatar-card flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden flex flex-col items-center justify-between cursor-pointer select-none relative";
+                card.innerHTML = `
+                    <img src="${sen.img}" class="w-full h-11 object-cover" alt="${sen.name}">
+                    <span class="text-[8px] font-bold tracking-tight text-amber-100/90 truncate w-full bg-black/70 py-0.5 text-center block z-10">${sen.name}</span>
+                `;
+                card.addEventListener('click', () => {
+                    applySenatorFilter(sen);
+                    triggerDiceQuoteRoll();
                 });
-                selectorContainer.appendChild(item);
+                selectorContainer.appendChild(card);
             });
 
+            itemSelectorContainer.innerHTML = "";
             itemList.forEach(obj => {
                 const item = document.createElement('div');
-                item.className = "flex-shrink-0 w-10 h-10 rounded-xl glass-panel flex items-center justify-center p-1 cursor-pointer transition hover:border-white/40 active:scale-95";
-                const thumbUrl = getItemImageUrl(obj);
-                item.innerHTML = `<img src="${thumbUrl}" class="w-8 h-8 object-contain rounded" alt="${obj.name}">`;
+                item.className = "flex-shrink-0 w-12 h-12 rounded-xl glass-panel flex flex-col items-center justify-center cursor-pointer border border-white/10 active:scale-95 text-center bg-black/30 select-none";
+                item.innerHTML = `<span class="text-xl">${obj.emoji}</span><span class="text-[8px] text-slate-400 font-medium">${obj.text}</span>`;
                 item.addEventListener('click', () => {
-                    selectedDecoration = obj;
-                    const decorationUrl = getItemImageUrl(obj);
-                    itemOverlay.src = decorationUrl;
-                    itemOverlay.style.opacity = "0.9";
-                    playTone(600, 'sine', 0.03);
+                    selectedDecoration = obj; playTone(600, 'sine', 0.03);
+                    document.querySelectorAll('#item-selector div').forEach(d => d.style.borderColor = 'rgba(255,255,255,0.1)');
+                    item.style.borderColor = '#dcaf64';
                 });
                 itemSelectorContainer.appendChild(item);
             });
         }
-
-        gachaBtn.addEventListener('click', () => {
-            let ticks = 0;
-            const runLoop = setInterval(() => {
-                const r = senatorList[Math.floor(Math.random() * senatorList.length)];
-                activeOverlay.src = getSenatorImageUrl(r); activeOverlay.style.opacity = "0.9";
-                liveQuoteBanner.innerText = `"${getRandomQuote(r.quotes)}"`;
-                playTone(200 + (ticks * 25), 'triangle', 0.03, 0.05);
-                ticks++;
-                if(ticks > 10) {
-                    clearInterval(runLoop);
-                    selectedSenator = senatorList[Math.floor(Math.random() * senatorList.length)];
-                    selectedQuote = getRandomQuote(selectedSenator.quotes);
-                    const senatorImage = getSenatorImageUrl(selectedSenator);
-                    activeOverlay.src = senatorImage;
-                    senatorFaceImg.src = senatorImage;
-                    senatorFaceName.innerText = selectedSenator.name;
-                    senatorFacePanel.style.opacity = "1";
-                    liveQuoteBanner.innerText = `"${selectedQuote}"`;
-                    tvWatermark.style.opacity = "1";
-                    playGavelStrike();
-                }
-            }, 90);
-        });
-
-        quoteGeneratorBtn.addEventListener('click', () => {
-            selectedSenator = null;
-            selectedQuote = getRandomQuote(senateOneLiners);
-            activeOverlay.style.opacity = "0";
-            itemOverlay.style.opacity = "0";
-            senatorFacePanel.style.opacity = "0";
-            liveQuoteBanner.innerText = `"${selectedQuote}"`;
-            tvWatermark.style.opacity = "1";
-            document.getElementById('status-orb').style.backgroundColor = '#dcaf64';
-            cameraContainer.style.boxShadow = `0 0 30px #dcaf6420, inset 0 0 20px #dcaf6408`;
-            playChime();
-        });
 
         modeToggleBtn.addEventListener('click', () => {
             isFourCutMode = !isFourCutMode;
@@ -562,18 +504,29 @@
         flipBtn.addEventListener('click', () => { currentFacingMode = (currentFacingMode === "user") ? "environment" : "user"; startCamera(); });
 
         clearBtn.addEventListener('click', () => {
-            selectedSenator = null; selectedQuote = null; selectedDecoration = null; stampsArray = []; renderStampsUI();
-            activeOverlay.src = ""; activeOverlay.style.opacity = "0";
-            itemOverlay.src = ""; itemOverlay.style.opacity = "0";
-            senatorFacePanel.style.opacity = "0";
+            selectedSenator = null; selectedDecoration = null; stampsArray = []; renderStampsUI();
             tvWatermark.style.opacity = "0";
-            liveQuoteBanner.innerText = "⚠️ PLENARY SESSION OPEN ⚠️";
+            currentActiveQuote = "🎲 TAP ME OR PRESS GAVEL TO ROLL QUOTE 🎲";
+            liveQuoteBanner.innerText = currentActiveQuote;
+            liveQuoteBanner.classList.add('animate-pulse');
             blurSlider.value = "0.4"; brightSlider.value = "1.02"; baldSlider.value = "75";
+            document.getElementById('status-orb').style.backgroundColor = '#dcaf64';
+            cameraContainer.style.boxShadow = '';
+            document.querySelectorAll('#item-selector div').forEach(d => d.style.borderColor = 'rgba(255,255,255,0.1)');
+            document.querySelectorAll('.senator-avatar-card').forEach(c => c.style.borderColor = 'rgba(220,175,100,0.2)');
         });
 
         captureBtn.addEventListener('click', () => {
-            if(isFourCutMode) { startFourCutHearingSequence(); } else { snapSingleTranscript(); }
+            if (currentActiveQuote.includes("🎲")) {
+                triggerDiceQuoteRoll(() => { executeSnapshotSequence(); });
+            } else {
+                executeSnapshotSequence();
+            }
         });
+
+        function executeSnapshotSequence() {
+            if(isFourCutMode) { startFourCutHearingSequence(); } else { snapSingleTranscript(); }
+        }
 
         function snapSingleTranscript() {
             playGavelStrike(); document.body.style.backgroundColor = '#ffffff'; setTimeout(() => document.body.style.background = '', 100);
@@ -583,11 +536,8 @@
             
             buildCanvasLayoutMatrix(ctx, w, h, () => {
                 renderCanvas.toBlob(blob => {
-                    globalBlob = blob;
-                    if (photoDownloadUrl) URL.revokeObjectURL(photoDownloadUrl);
-                    photoDownloadUrl = URL.createObjectURL(blob);
-                    modalImage.src = photoDownloadUrl;
-                    archiveItemLocally(photoDownloadUrl); previewModal.classList.remove('hidden');
+                    globalBlob = blob; modalImage.src = URL.createObjectURL(blob);
+                    archiveItemLocally(modalImage.src); previewModal.classList.remove('hidden');
                 }, 'image/jpeg', 0.95);
             });
         }
@@ -614,6 +564,7 @@
                         countdownOverlay.classList.remove('hidden'); res();
                     });
                 });
+                currentActiveQuote = funnyDiceQuotes[Math.floor(Math.random() * funnyDiceQuotes.length)];
             }
             countdownOverlay.classList.add('hidden');
 
@@ -632,65 +583,33 @@
             ctx.fillText("OXYSENATECAM RECORD - OPEN PLENARY", 300, 1515);
 
             renderCanvas.toBlob(blob => {
-                globalBlob = blob;
-                if (photoDownloadUrl) URL.revokeObjectURL(photoDownloadUrl);
-                photoDownloadUrl = URL.createObjectURL(blob);
-                modalImage.src = photoDownloadUrl;
-                archiveItemLocally(photoDownloadUrl); previewModal.classList.remove('hidden');
+                globalBlob = blob; modalImage.src = URL.createObjectURL(blob);
+                archiveItemLocally(modalImage.src); previewModal.classList.remove('hidden');
             }, 'image/jpeg', 0.95);
-        }
-
-        function saveBlobToGallery(blob) {
-            const fileName = `oxysenate_${Date.now()}.jpg`;
-            const file = new File([blob], fileName, { type: 'image/jpeg' });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({ files: [file], title: 'OXYSENATECAM Log' }).catch(() => {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a'); a.href = url; a.download = fileName; a.target = '_blank';
-                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                });
-                return;
-            }
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = fileName; a.target = '_blank';
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
         function buildCanvasLayoutMatrix(ctx, width, height, callback) {
             ctx.drawImage(liveCanvas, 0, 0, width, height);
 
-            if(!isFourCutMode && selectedSenator && selectedQuote) {
-                ctx.font = `bold ${width * 0.032}px system-ui, sans-serif`; ctx.fillStyle = "#dcaf64"; ctx.textAlign = "center";
+            ctx.fillStyle = "#dc2626"; ctx.fillRect(width * 0.04, height * 0.04, width * 0.38, height * 0.035);
+            ctx.font = `bold ${width * 0.022}px system-ui, sans-serif`; ctx.fillStyle = "#ffffff"; ctx.textAlign = "center";
+            ctx.fillText("🔴 LIVE: CONG. / SENATE HEARING", width * 0.23, height * 0.064);
+
+            if(!isFourCutMode && !currentActiveQuote.includes("🎲")) {
+                ctx.font = `bold ${width * 0.028}px system-ui, sans-serif`; ctx.fillStyle = "#dcaf64"; ctx.textAlign = "center";
                 ctx.shadowColor = "rgba(0, 0, 0, 0.85)"; ctx.shadowBlur = 12;
-                ctx.fillText(selectedQuote.toUpperCase(), width / 2, height * 0.88); ctx.shadowBlur = 0;
+                
+                ctx.fillText(currentActiveQuote.toUpperCase(), width / 2, height * 0.85); ctx.shadowBlur = 0;
             }
 
-            const queue = [];
-            if (itemOverlay.src && itemOverlay.style.opacity !== "0") {
-                queue.push(new Promise(r => {
-                    const img = new Image(); img.crossOrigin = "anonymous"; img.src = itemOverlay.src;
-                    img.onload = () => { const s = width * 0.22; ctx.drawImage(img, width * 0.05, height - s - (height * 0.05), s, s); r(); };
-                    img.onerror = r;
-                }));
-            }
-            if (activeOverlay.src && activeOverlay.style.opacity !== "0") {
-                queue.push(new Promise(r => {
-                    const img = new Image(); img.crossOrigin = "anonymous"; img.src = activeOverlay.src;
-                    img.onload = () => { const s = width * 0.35; ctx.drawImage(img, width - s - (width * 0.05), height - s - (height * 0.05), s, s); r(); };
-                    img.onerror = r;
-                }));
-            }
             stampsArray.forEach(stamp => {
-                queue.push(new Promise(r => {
-                    const img = new Image(); img.crossOrigin = "anonymous"; img.src = stamp.url;
-                    img.onload = () => { const s = 50; ctx.drawImage(img, (stamp.x * width) - s/2, (stamp.y * height) - s/2, s, s); r(); };
-                    img.onerror = r;
-                }));
+                ctx.font = "45px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(stamp.emoji, stamp.x * width, stamp.y * height);
             });
 
-            if(queue.length > 0) { Promise.all(queue).then(callback); } else { callback(); }
+            callback();
         }
 
         function archiveItemLocally(url) {
@@ -717,20 +636,20 @@
         closeAlbumBtn.addEventListener('click', () => albumDrawer.classList.add('translate-y-full'));
         clearAlbumBtn.addEventListener('click', () => { localStorage.removeItem('senate_booth_vault'); albumGrid.innerHTML = ""; playChime(); });
 
-        downloadPhotoBtn.addEventListener('click', () => {
+        downloadPhotoBtn.addEventListener('click', async () => {
             if (!globalBlob) return;
-            saveBlobToGallery(globalBlob);
+            try {
+                const file = new File([globalBlob], `oxysenate_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({ files: [file], title: 'OXYSENATECAM Log' });
+                } else {
+                    const a = document.createElement('a'); a.href = modalImage.src; a.download = `oxysenate_${Date.now()}.jpg`;
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                }
+            } catch (err) {}
         });
 
-        closeModalBtn.addEventListener('click', () => {
-            previewModal.classList.add('hidden');
-            modalImage.src = "";
-            globalBlob = null;
-            if (photoDownloadUrl) {
-                URL.revokeObjectURL(photoDownloadUrl);
-                photoDownloadUrl = null;
-            }
-        });
+        closeModalBtn.addEventListener('click', () => { previewModal.classList.add('hidden'); modalImage.src = ""; globalBlob = null; });
         window.addEventListener('DOMContentLoaded', () => { initSelectors(); startCamera(); });
     </script>
 </body>
