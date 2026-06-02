@@ -236,42 +236,42 @@
         function playGavelStrike() { playTone(85, 'triangle', 0.3, 0.5); playTone(150, 'triangle', 0.1, 0.2); }
 
         const senatorList = [
-            { id: 'bato', name: 'Bato', tint: 'contrast(1.15) brightness(1.05)', glow: '#ef4444', url: 'https://senate.gov.ph/images/senators/bato_19th.jpg', quotes: ["Sige lang, paborito niyo naman ako.", "Walang mahirap kung may ficha paper.", "Ako na bahala sa impeachment.", "Gulong-kadena o mic-check, laban lang.", "Sino bumoto? Ayan may record."] },
-            { id: 'robin', name: 'Robin', tint: 'sepia(0.15) saturate(1.2)', glow: '#eab308', url: 'https://senate.gov.ph/images/senators/padilla_19th.jpg', quotes: ["I deal with facts. Can you speak Tagalog?", "Magtanong ka sa batas, hindi sa tsismis.", "Hindi ako artista, senador ako.", "Mag-usap tayo sa mga dokumento at hindi sa drama."] },
-            { id: 'risa', name: 'Risa', tint: 'brightness(1.02) saturate(1.05)', glow: '#a855f7', url: 'https://senate.gov.ph/images/senators/hontiveros_19th.jpg', quotes: ["Mr. Witness, wag mo kaming paikutin.", "May committee hearing kami sa tita mo.", "Hindi ito tungkol sa pruweba, kundi sa konsensiya.", "Kung may pruweba, hilingin mo ngayon."] },
-            { id: 'trillanes', name: 'Trillanes', tint: 'contrast(1.15) grayscale(0.1)', glow: '#3b82f6', url: 'https://senate.gov.ph/images/senators/trillanes.jpg', quotes: ["May resibo ako dito. Hindi ka pwedeng magtago.", "I-verify natin yan with one paper.", "Kailangang may transparency, hindi drama.", "Type 'accountability' sa comments."] },
-            { id: 'villar_c', name: 'Cynthia', tint: 'saturate(1.25)', glow: '#22c55e', url: 'https://senate.gov.ph/images/senators/villar_19th.jpg', quotes: ["Aanhin niyo ba ang research?", "Sabi ng datos, hindi gimik.", "Isang tanong: research o resibo?"] },
-            { id: 'revilla', name: 'Bong Revilla', tint: 'hue-rotate(15deg) contrast(1.05)', glow: '#ec4899', url: 'https://senate.gov.ph/images/senators/revilla_19th.jpg', quotes: ["*BUDOTS DANCE INTENSIFIES*", "Sinigaw na 'Pilipinas, Checheche'!", "Action star mode activated."] },
-            { id: 'bonggo', name: 'Bong Go', tint: 'brightness(1.05) saturate(0.95)', glow: '#06b6d4', url: 'https://senate.gov.ph/images/senators/go_19th.jpg', quotes: ["Selfie muna bago mag-serbisyo!", "Public service, tapos selfie.", "Iwasan ang fake news, pero selfie yes."] },
-            { id: 'bam', name: 'Bam Aquino', tint: 'contrast(1.08) saturate(1.1)', glow: '#f97316', url: 'https://senate.gov.ph/images/senators/aquino.jpg', quotes: ["Edukasyon at resibo ang sagot.", "Hindi sapat ang press conference, may syllabus dapat.", "Ang tunay na reform, may lesson plan."] },
-            { id: 'erwin', name: 'Erwin Tulfo', tint: 'contrast(1.2) brightness(1.02)', glow: '#b91c1c', url: 'https://senate.gov.ph/images/senators/tulfo_e_19th.jpg', quotes: ["Isusumbong kita sa Senado!", "Mayroon kang 48 hours to explain.", "Walang mahirap na usapin sa radyo at plenaryo."] },
-            { id: 'kiko', name: 'Kiko', tint: 'sepia(0.05) saturate(1.05)', glow: '#15803d', url: 'https://senate.gov.ph/images/senators/pangilinan.jpg', quotes: ["Ipaglaban ang magsasaka at ang batas!", "Sa Senado dapat may malasakit at matibay na argumento.", "Boses ng agraryo, boses ng bayan."] },
-            { id: 'marcoleta', name: 'Marcoleta', tint: 'contrast(1.15) brightness(0.98)', glow: '#7c2d12', url: 'https://senate.gov.ph/images/senators/marcoleta.jpg', quotes: ["I object! This is standard procedure!", "Ngayon ipapaliwanag mo yan sa plenaryo.", "Question, objection, motion accepted."] },
-            { id: 'lacson', name: 'Ping Lacson', tint: 'grayscale(0.15) contrast(1.1)', glow: '#64748b', url: 'https://senate.gov.ph/images/senators/lacson.jpg', quotes: ["Walang pork barrel kahit isang sentimo.", "Resibo sa kape, resibo sa proyekto.", "May bago akong tanong: nasa dokumento ba yan?"] },
-            { id: 'sotto', name: 'Tito Sotto', tint: 'sepia(0.1) brightness(1.02)', glow: '#b45309', url: 'https://senate.gov.ph/images/senators/sotto.jpg', quotes: ["Wanbol University system checking in.", "May quiz sa Senado, handa ka na ba?", "Trending na ang hearing na 'to."] },
-            { id: 'pia', name: 'Pia Cayetano', tint: 'brightness(1.04) saturate(1.02)', glow: '#db2777', url: 'https://senate.gov.ph/images/senators/cayetano_p_19th.jpg', quotes: ["Let's stick to the legal frameworks.", "Neutral ang vlogger, seryoso ang Senado.", "Batas muna, viral later."] },
-            { id: 'villar_cam', name: 'Camille V.', tint: 'saturate(1.2) brightness(1.05)', glow: '#10b981', url: 'https://senate.gov.ph/images/senators/villar_c_19th.jpg', quotes: ["Ingat at tagumpay para sa lahat.", "Ang reporting ay para sa susunod na henerasyon.", "Magsalita ng may malasakit at ebidensya."] },
-            { id: 'litolapid', name: 'Lito Lapid', tint: 'contrast(1.1) hue-rotate(-5deg)', glow: '#ca8a04', url: 'https://senate.gov.ph/images/senators/lapid_19th.jpg', quotes: ["*Tinitigan nang malupit sa action movie*", "Hawak ko ang bala, hindi tsismis.", "Ready na akong mag-punch-out ng fake news."] },
-            { id: 'imee', name: 'Imee Marcos', tint: 'saturate(1.15) brightness(1.03)', glow: '#dc2626', url: 'https://senate.gov.ph/images/senators/marcos_19th.jpg', quotes: ["Ako ang manang ninyong tagapagtanggol.", "Sa Senado may araw ng debate, hindi parade.", "Umasa kayo sa manang problem solver."] },
-            { id: 'alanpeter', name: 'Alan Peter C.', tint: 'contrast(1.05) saturate(1.05)', glow: '#2563eb', url: 'https://senate.gov.ph/images/senators/cayetano_a_19th.jpg', quotes: ["Saan napunta ang 10k na ayuda?", "May follow-up question: kanino ibinigay?", "Hindi pwedeng 'di mo alam ang sagot."] },
-            { id: 'loren', name: 'Loren Legarda', tint: 'brightness(1.02) saturate(1.1)', glow: '#0d9488', url: 'https://senate.gov.ph/images/senators/legarda_19th.jpg', quotes: ["Alagaan ang kalikasan at kultura!", "Kung may agrikultura, may kinabukasan.", "Narito ako para sa bayan at kalikasan."] },
-            { id: 'chiz', name: 'Chiz Escudero', tint: 'contrast(1.08) brightness(1.02)', glow: '#4f46e5', url: 'https://senate.gov.ph/images/senators/escudero_19th.jpg', quotes: ["Sa madaling salita, aksyon ang kailangan.", "Hindi sapat ang kasiyahan, kailangan ng plano.", "May tama ang tanong. May sagot ba? "] },
-            { id: 'jv', name: 'JV Ejercito', tint: 'saturate(1.1) brightness(1.04)', glow: '#ea580c', url: 'https://senate.gov.ph/images/senators/ejercito_19th.jpg', quotes: ["The Good One is back on track.", "Sige, ipakita natin ang good governance.", "May serbisyo, may sipag, may saya."] },
-            { id: 'markvillar', name: 'Mark Villar', tint: 'saturate(1.05) brightness(1.01)', glow: '#16a34a', url: 'https://senate.gov.ph/images/senators/villar_m_19th.jpg', quotes: ["Build, build, build pa ng pictures!", "Project proposal, tapos picture pa.", "Infrastructure meeting, selfie ready."] },
-            { id: 'sara', name: 'VP Sara', tint: 'contrast(1.12) saturate(1.1)', glow: '#f97316', url: 'https://placehold.co/100x100/882211/dcaf64?text=VP+Sara', quotes: ["Basta, may order ang barangay!", "May sariling roadmap ako, may sariling nakatayo!", "Di ako nagpa-preno sa public service. Pinapaandar ko pa!", "May pinakamabilis na pila sa bayan, andyan ako."] },
-            { id: 'bbm', name: 'President Bongbong', tint: 'brightness(1.1) saturate(1.08)', glow: '#dc2626', url: 'https://placehold.co/100x100/221188/dcaf64?text=BBM', quotes: ["Build, build, build, build, build... plus one more build!", "May unity, may glory, may production value.", "Huwag kayong mag-worry, may budget pa sa meme department.", "May bagong banner na wala pa sa Instagram."] },
-            { id: 'raffy', name: 'Raffy Tulfo', tint: 'contrast(1.2) saturation(1.15)', glow: '#e11d48', url: 'https://senate.gov.ph/images/senators/tulfo_r_19th.jpg', quotes: ["I-marites natin 'yan live sa radyo!", "May publike duty, may radyo commentary.", "Kailangan ng buong hustisya, hindi tsismis lang."] },
-            { id: 'win', name: 'Win Gatchalian', tint: 'brightness(1.02) saturate(1.05)', glow: '#0284c7', url: 'https://senate.gov.ph/images/senators/gatchalian_19th.jpg', quotes: ["Tingnan natin ang micro data checks.", "Hindi lang dapat macro, pati micro din.", "May spreadsheet at may sundalo ng facts."] },
-            { id: 'joel', name: 'Joel V.', tint: 'saturate(1.1) contrast(1.05)', glow: '#f59e0b', url: 'https://senate.gov.ph/images/senators/villanueva_19th.jpg', quotes: ["Trabaho at TESDA para sa bawat Pilipino!", "Skill training dapat kasama sa budget.", "Bilang senador, may tutok sa kabuhayan."] },
-            { id: 'migz', name: 'Migz Zubiri', tint: 'contrast(1.06) brightness(1.02)', glow: '#475569', url: 'https://senate.gov.ph/images/senators/zubiri_19th.jpg', quotes: ["Order in the plenary chamber, please!", "May dalawang minuto ka lang sa tanong.", "Pakinggan muna natin ang full report."] }
+            { id: 'bato', name: 'Bato', tint: 'contrast(1.15) brightness(1.05)', glow: '#ef4444', url: '', quotes: ["Sige lang, paborito niyo naman ako.", "Walang mahirap kung may ficha paper.", "Ako na bahala sa impeachment.", "Gulong-kadena o mic-check, laban lang.", "Sino bumoto? Ayan may record."] },
+            { id: 'robin', name: 'Robin', tint: 'sepia(0.15) saturate(1.2)', glow: '#eab308', url: '', quotes: ["I deal with facts. Can you speak Tagalog?", "Magtanong ka sa batas, hindi sa tsismis.", "Hindi ako artista, senador ako.", "Mag-usap tayo sa mga dokumento at hindi sa drama."] },
+            { id: 'risa', name: 'Risa', tint: 'brightness(1.02) saturate(1.05)', glow: '#a855f7', url: '', quotes: ["Mr. Witness, wag mo kaming paikutin.", "May committee hearing kami sa tita mo.", "Hindi ito tungkol sa pruweba, kundi sa konsensiya.", "Kung may pruweba, hilingin mo ngayon."] },
+            { id: 'trillanes', name: 'Trillanes', tint: 'contrast(1.15) grayscale(0.1)', glow: '#3b82f6', url: '', quotes: ["May resibo ako dito. Hindi ka pwedeng magtago.", "I-verify natin yan with one paper.", "Kailangang may transparency, hindi drama.", "Type 'accountability' sa comments."] },
+            { id: 'villar_c', name: 'Cynthia', tint: 'saturate(1.25)', glow: '#22c55e', url: '', quotes: ["Aanhin niyo ba ang research?", "Sabi ng datos, hindi gimik.", "Isang tanong: research o resibo?"] },
+            { id: 'revilla', name: 'Bong Revilla', tint: 'hue-rotate(15deg) contrast(1.05)', glow: '#ec4899', url: '', quotes: ["*BUDOTS DANCE INTENSIFIES*", "Sinigaw na 'Pilipinas, Checheche'!", "Action star mode activated."] },
+            { id: 'bonggo', name: 'Bong Go', tint: 'brightness(1.05) saturate(0.95)', glow: '#06b6d4', url: '', quotes: ["Selfie muna bago mag-serbisyo!", "Public service, tapos selfie.", "Iwasan ang fake news, pero selfie yes."] },
+            { id: 'bam', name: 'Bam Aquino', tint: 'contrast(1.08) saturate(1.1)', glow: '#f97316', url: '', quotes: ["Edukasyon at resibo ang sagot.", "Hindi sapat ang press conference, may syllabus dapat.", "Ang tunay na reform, may lesson plan."] },
+            { id: 'erwin', name: 'Erwin Tulfo', tint: 'contrast(1.2) brightness(1.02)', glow: '#b91c1c', url: '', quotes: ["Isusumbong kita sa Senado!", "Mayroon kang 48 hours to explain.", "Walang mahirap na usapin sa radyo at plenaryo."] },
+            { id: 'kiko', name: 'Kiko', tint: 'sepia(0.05) saturate(1.05)', glow: '#15803d', url: '', quotes: ["Ipaglaban ang magsasaka at ang batas!", "Sa Senado dapat may malasakit at matibay na argumento.", "Boses ng agraryo, boses ng bayan."] },
+            { id: 'marcoleta', name: 'Marcoleta', tint: 'contrast(1.15) brightness(0.98)', glow: '#7c2d12', url: '', quotes: ["I object! This is standard procedure!", "Ngayon ipapaliwanag mo yan sa plenaryo.", "Question, objection, motion accepted."] },
+            { id: 'lacson', name: 'Ping Lacson', tint: 'grayscale(0.15) contrast(1.1)', glow: '#64748b', url: '', quotes: ["Walang pork barrel kahit isang sentimo.", "Resibo sa kape, resibo sa proyekto.", "May bago akong tanong: nasa dokumento ba yan?"] },
+            { id: 'sotto', name: 'Tito Sotto', tint: 'sepia(0.1) brightness(1.02)', glow: '#b45309', url: '', quotes: ["Wanbol University system checking in.", "May quiz sa Senado, handa ka na ba?", "Trending na ang hearing na 'to."] },
+            { id: 'pia', name: 'Pia Cayetano', tint: 'brightness(1.04) saturate(1.02)', glow: '#db2777', url: '', quotes: ["Let's stick to the legal frameworks.", "Neutral ang vlogger, seryoso ang Senado.", "Batas muna, viral later."] },
+            { id: 'villar_cam', name: 'Camille V.', tint: 'saturate(1.2) brightness(1.05)', glow: '#10b981', url: '', quotes: ["Ingat at tagumpay para sa lahat.", "Ang reporting ay para sa susunod na henerasyon.", "Magsalita ng may malasakit at ebidensya."] },
+            { id: 'litolapid', name: 'Lito Lapid', tint: 'contrast(1.1) hue-rotate(-5deg)', glow: '#ca8a04', url: '', quotes: ["*Tinitigan nang malupit sa action movie*", "Hawak ko ang bala, hindi tsismis.", "Ready na akong mag-punch-out ng fake news."] },
+            { id: 'imee', name: 'Imee Marcos', tint: 'saturate(1.15) brightness(1.03)', glow: '#dc2626', url: '', quotes: ["Ako ang manang ninyong tagapagtanggol.", "Sa Senado may araw ng debate, hindi parade.", "Umasa kayo sa manang problem solver."] },
+            { id: 'alanpeter', name: 'Alan Peter C.', tint: 'contrast(1.05) saturate(1.05)', glow: '#2563eb', url: '', quotes: ["Saan napunta ang 10k na ayuda?", "May follow-up question: kanino ibinigay?", "Hindi pwedeng 'di mo alam ang sagot."] },
+            { id: 'loren', name: 'Loren Legarda', tint: 'brightness(1.02) saturate(1.1)', glow: '#0d9488', url: '', quotes: ["Alagaan ang kalikasan at kultura!", "Kung may agrikultura, may kinabukasan.", "Narito ako para sa bayan at kalikasan."] },
+            { id: 'chiz', name: 'Chiz Escudero', tint: 'contrast(1.08) brightness(1.02)', glow: '#4f46e5', url: '', quotes: ["Sa madaling salita, aksyon ang kailangan.", "Hindi sapat ang kasiyahan, kailangan ng plano.", "May tama ang tanong. May sagot ba? "] },
+            { id: 'jv', name: 'JV Ejercito', tint: 'saturate(1.1) brightness(1.04)', glow: '#ea580c', url: '', quotes: ["The Good One is back on track.", "Sige, ipakita natin ang good governance.", "May serbisyo, may sipag, may saya."] },
+            { id: 'markvillar', name: 'Mark Villar', tint: 'saturate(1.05) brightness(1.01)', glow: '#16a34a', url: '', quotes: ["Build, build, build pa ng pictures!", "Project proposal, tapos picture pa.", "Infrastructure meeting, selfie ready."] },
+            { id: 'sara', name: 'VP Sara', tint: 'contrast(1.12) saturate(1.1)', glow: '#f97316', url: '', quotes: ["Basta, may order ang barangay!", "May sariling roadmap ako, may sariling nakatayo!", "Di ako nagpa-preno sa public service. Pinapaandar ko pa!", "May pinakamabilis na pila sa bayan, andyan ako."] },
+            { id: 'bbm', name: 'President Bongbong', tint: 'brightness(1.1) saturate(1.08)', glow: '#dc2626', url: '', quotes: ["Build, build, build, build, build... plus one more build!", "May unity, may glory, may production value.", "Huwag kayong mag-worry, may budget pa sa meme department.", "May bagong banner na wala pa sa Instagram."] },
+            { id: 'raffy', name: 'Raffy Tulfo', tint: 'contrast(1.2) saturation(1.15)', glow: '#e11d48', url: '', quotes: ["I-marites natin 'yan live sa radyo!", "May publike duty, may radyo commentary.", "Kailangan ng buong hustisya, hindi tsismis lang."] },
+            { id: 'win', name: 'Win Gatchalian', tint: 'brightness(1.02) saturate(1.05)', glow: '#0284c7', url: '', quotes: ["Tingnan natin ang micro data checks.", "Hindi lang dapat macro, pati micro din.", "May spreadsheet at may sundalo ng facts."] },
+            { id: 'joel', name: 'Joel V.', tint: 'saturate(1.1) contrast(1.05)', glow: '#f59e0b', url: '', quotes: ["Trabaho at TESDA para sa bawat Pilipino!", "Skill training dapat kasama sa budget.", "Bilang senador, may tutok sa kabuhayan."] },
+            { id: 'migz', name: 'Migz Zubiri', tint: 'contrast(1.06) brightness(1.02)', glow: '#475569', url: '', quotes: ["Order in the plenary chamber, please!", "May dalawang minuto ka lang sa tanong.", "Pakinggan muna natin ang full report."] }
         ];
 
         const itemList = [
-            { id: 'comb', name: 'Sukat Buhok', url: 'https://placehold.co/100x100/332211/dcaf64?text=🪮' },
-            { id: 'folder', name: 'Folder ng Resibo', url: 'https://placehold.co/100x100/112233/dcaf64?text=📁' },
-            { id: 'gavel', name: 'Gavel ng Batas', url: 'https://placehold.co/100x100/221100/dcaf64?text=🔨' },
-            { id: 'tissue', name: 'Tissue Punas Luha', url: 'https://placehold.co/100x100/333333/dcaf64?text=🧻' },
-            { id: 'house', name: 'Subdivision House', url: 'https://placehold.co/100x100/113311/dcaf64?text=🏠' }
+            { id: 'comb', name: 'Sukat Buhok', url: '' },
+            { id: 'folder', name: 'Folder ng Resibo', url: '' },
+            { id: 'gavel', name: 'Gavel ng Batas', url: '' },
+            { id: 'tissue', name: 'Tissue Punas Luha', url: '' },
+            { id: 'house', name: 'Subdivision House', url: '' }
         ];
 
         const video = document.getElementById('camera-stream');
@@ -337,7 +337,12 @@
             }
         };
         activeOverlay.onerror = () => {
-            activeOverlay.style.opacity = '0';
+            if (selectedSenator) {
+                activeOverlay.src = avatarFallbackDataUrl(selectedSenator.initial || selectedSenator.name.substring(0, 2));
+                activeOverlay.style.opacity = '0.9';
+            } else {
+                activeOverlay.style.opacity = '0';
+            }
         };
 
         let currentStream = null, currentFacingMode = "user", globalBlob = null, photoDownloadUrl = null;
@@ -352,6 +357,34 @@
             const label = text.slice(0, 2).toUpperCase();
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="${bg}"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="72" font-weight="800" fill="${fill}">${label}</text></svg>`;
             return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function senatorPlaceholderUrl(name, size = 150) {
+            const initials = (name || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+            return avatarFallbackDataUrl(initials || name.substring(0, 2));
+        }
+
+        function getSenatorImageUrl(senator) {
+            return senator.url || senatorPlaceholderUrl(senator.name, 150);
+        }
+
+        function itemPlaceholderDataUrl(item) {
+            const icons = {
+                comb: '🪮',
+                folder: '📁',
+                gavel: '🔨',
+                tissue: '🧻',
+                house: '🏠'
+            };
+            const icon = icons[item.id] || item.name.slice(0, 2).toUpperCase();
+            const bg = '#111827';
+            const fill = '#dcaf64';
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="${bg}"/><text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="96" fill="${fill}">${icon}</text><text x="50%" y="90%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" fill="#ffffff">${item.name}</text></svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function getItemImageUrl(item) {
+            return item.url || itemPlaceholderDataUrl(item);
         }
 
         function processLiveFrameLoop() {
@@ -403,7 +436,7 @@
             const rect = cameraContainer.getBoundingClientRect();
             const pctX = (e.clientX - rect.left) / rect.width;
             const pctY = (e.clientY - rect.top) / rect.height;
-            stampsArray.push({ url: selectedDecoration.url, x: pctX, y: pctY });
+            stampsArray.push({ url: getItemImageUrl(selectedDecoration), x: pctX, y: pctY });
             renderStampsUI();
             playTone(350, 'sine', 0.04, 0.05);
         });
@@ -421,10 +454,10 @@
         function initSelectors() {
             senatorList.forEach(sen => {
                 const item = document.createElement('div');
-                item.className = "flex-shrink-0 w-14 h-14 rounded-xl glass-panel overflow-hidden flex flex-col items-center justify-center cursor-pointer border border-[#dcaf64]/20 hover:border-[#dcaf64]/60 transition active:scale-95 relative bg-black/40";
+                item.className = "senator-avatar-card flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden flex flex-col items-center justify-center cursor-pointer border border-[#dcaf64]/20 hover:border-[#dcaf64]/60 transition active:scale-95 relative bg-black/40";
 
                 const thumb = document.createElement('img');
-                thumb.src = sen.url;
+                thumb.src = getSenatorImageUrl(sen);
                 thumb.alt = sen.name;
                 thumb.className = "w-full h-full object-cover opacity-80 hover:opacity-100 transition";
                 thumb.loading = 'lazy';
@@ -441,8 +474,9 @@
                 item.addEventListener('click', () => {
                     selectedSenator = sen;
                     selectedQuote = getRandomQuote(sen.quotes);
-                    activeOverlay.src = sen.url; activeOverlay.style.opacity = "0.9";
-                    senatorFaceImg.src = sen.url;
+                    const senatorImage = getSenatorImageUrl(sen);
+                    activeOverlay.src = senatorImage; activeOverlay.style.opacity = "0.9";
+                    senatorFaceImg.src = senatorImage;
                     senatorFaceName.innerText = sen.name;
                     senatorFacePanel.style.opacity = "1";
                     liveQuoteBanner.innerText = `"${selectedQuote}"`;
@@ -457,9 +491,14 @@
             itemList.forEach(obj => {
                 const item = document.createElement('div');
                 item.className = "flex-shrink-0 w-10 h-10 rounded-xl glass-panel flex items-center justify-center p-1 cursor-pointer transition hover:border-white/40 active:scale-95";
-                item.innerHTML = `<img src="${obj.url}" class="w-8 h-8 object-contain rounded" alt="${obj.name}">`;
+                const thumbUrl = getItemImageUrl(obj);
+                item.innerHTML = `<img src="${thumbUrl}" class="w-8 h-8 object-contain rounded" alt="${obj.name}">`;
                 item.addEventListener('click', () => {
-                    selectedDecoration = obj; itemOverlay.src = obj.url; itemOverlay.style.opacity = "0.9"; playTone(600, 'sine', 0.03);
+                    selectedDecoration = obj;
+                    const decorationUrl = getItemImageUrl(obj);
+                    itemOverlay.src = decorationUrl;
+                    itemOverlay.style.opacity = "0.9";
+                    playTone(600, 'sine', 0.03);
                 });
                 itemSelectorContainer.appendChild(item);
             });
@@ -469,7 +508,7 @@
             let ticks = 0;
             const runLoop = setInterval(() => {
                 const r = senatorList[Math.floor(Math.random() * senatorList.length)];
-                activeOverlay.src = r.url; activeOverlay.style.opacity = "0.9";
+                activeOverlay.src = getSenatorImageUrl(r); activeOverlay.style.opacity = "0.9";
                 liveQuoteBanner.innerText = `"${getRandomQuote(r.quotes)}"`;
                 playTone(200 + (ticks * 25), 'triangle', 0.03, 0.05);
                 ticks++;
@@ -477,8 +516,9 @@
                     clearInterval(runLoop);
                     selectedSenator = senatorList[Math.floor(Math.random() * senatorList.length)];
                     selectedQuote = getRandomQuote(selectedSenator.quotes);
-                    activeOverlay.src = selectedSenator.url;
-                    senatorFaceImg.src = selectedSenator.url;
+                    const senatorImage = getSenatorImageUrl(selectedSenator);
+                    activeOverlay.src = senatorImage;
+                    senatorFaceImg.src = senatorImage;
                     senatorFaceName.innerText = selectedSenator.name;
                     senatorFacePanel.style.opacity = "1";
                     liveQuoteBanner.innerText = `"${selectedQuote}"`;
@@ -632,18 +672,21 @@
                 queue.push(new Promise(r => {
                     const img = new Image(); img.crossOrigin = "anonymous"; img.src = itemOverlay.src;
                     img.onload = () => { const s = width * 0.22; ctx.drawImage(img, width * 0.05, height - s - (height * 0.05), s, s); r(); };
+                    img.onerror = r;
                 }));
             }
             if (activeOverlay.src && activeOverlay.style.opacity !== "0") {
                 queue.push(new Promise(r => {
                     const img = new Image(); img.crossOrigin = "anonymous"; img.src = activeOverlay.src;
                     img.onload = () => { const s = width * 0.35; ctx.drawImage(img, width - s - (width * 0.05), height - s - (height * 0.05), s, s); r(); };
+                    img.onerror = r;
                 }));
             }
             stampsArray.forEach(stamp => {
                 queue.push(new Promise(r => {
                     const img = new Image(); img.crossOrigin = "anonymous"; img.src = stamp.url;
                     img.onload = () => { const s = 50; ctx.drawImage(img, (stamp.x * width) - s/2, (stamp.y * height) - s/2, s, s); r(); };
+                    img.onerror = r;
                 }));
             });
 
