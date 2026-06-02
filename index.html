@@ -249,16 +249,16 @@
             "Excuse me, hindi kita tinatanong!"
         ];
 
-        // FIXED: Ginamitan ng Base64 Inline SVG Data Images para zero network fetching at 100% immune sa Vercel CORS restrictions!
+        // Simplified: Just names of senators with filter colors
         const senatorList = [
-            { id: 'sara', name: 'Inday S.', tint: 'contrast(1.2) hue-rotate(-5deg)', glow: '#22c55e', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23123415"/><circle cx="50" cy="42" r="24" fill="%23f8d7a3"/><circle cx="38" cy="36" r="5" fill="%23121d11"/><circle cx="62" cy="36" r="5" fill="%23121d11"/><path d="M35 55c5 8 25 8 30 0" stroke="%23121d11" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="26" y="70" width="48" height="18" rx="8" fill="%231c4826"/><text x="50" y="86" font-family="sans-serif" font-size="12" font-weight="bold" fill="%23dcf6ae" text-anchor="middle">🦅</text></svg>' },
-            { id: 'bato', name: 'Bato', tint: 'contrast(1.15) brightness(1.05)', glow: '#ef4444', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%2335131f"/><ellipse cx="50" cy="45" rx="22" ry="24" fill="%23ebcba4"/><path d="M34 40c3-12 26-12 29 0" stroke="%2317230e" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="38" cy="42" r="4" fill="%2317230e"/><circle cx="62" cy="42" r="4" fill="%2317230e"/><path d="M33 62c7 7 27 7 34 0" stroke="%2317230e" stroke-width="4" fill="none" stroke-linecap="round"/><text x="50" y="86" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🧑‍🦲</text></svg>' },
-            { id: 'robin', name: 'Robin', tint: 'sepia(0.15) saturate(1.2)', glow: '#eab308', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232f1f0f"/><circle cx="50" cy="42" r="24" fill="%23d8b891"/><circle cx="38" cy="38" r="5" fill="%23192510"/><circle cx="62" cy="38" r="5" fill="%23192510"/><path d="M34 55c6 9 24 9 30 0" stroke="%23192510" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="26" y="70" width="48" height="18" rx="9" fill="%23212b2f"/><path d="M33 75h34" stroke="%23f1d08a" stroke-width="3" stroke-linecap="round"/><text x="50" y="88" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🎬</text></svg>' },
-            { id: 'risa', name: 'Risa', tint: 'brightness(1.02) saturate(1.05)', glow: '#a855f7', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23252a4d"/><circle cx="50" cy="40" r="24" fill="%23f5d9b9"/><circle cx="38" cy="38" r="5" fill="%2318242f"/><circle cx="62" cy="38" r="5" fill="%2318242f"/><path d="M34 56c7 8 24 8 31 0" stroke="%2318242f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M50 22v14" stroke="%23d6af9f" stroke-width="4"/><path d="M34 28h32" stroke="%23d6af9f" stroke-width="4"/><text x="50" y="88" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">⚖️</text></svg>' },
-            { id: 'trillanes', name: 'Trillanes', tint: 'contrast(1.15) grayscale(0.1)', glow: '#3b82f6', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%2309172c"/><circle cx="50" cy="42" r="24" fill="%23d9c7a6"/><circle cx="38" cy="38" r="5" fill="%230b0f1d"/><circle cx="62" cy="38" r="5" fill="%230b0f1d"/><path d="M34 55c6 8 24 8 30 0" stroke="%230b0f1d" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="27" y="70" width="46" height="16" rx="8" fill="%23212e54"/><text x="50" y="86" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🗂️</text></svg>' },
-            { id: 'villar_c', name: 'Cynthia', tint: 'saturate(1.25)', glow: '#10b981', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230f2d25"/><circle cx="50" cy="42" r="24" fill="%23e9ccac"/><circle cx="38" cy="38" r="5" fill="%230b1a16"/><circle cx="62" cy="38" r="5" fill="%230b1a16"/><path d="M34 55c6 8 24 8 30 0" stroke="%230b1a16" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M26 74c8-8 20-12 24-12s16 4 24 12" stroke="%23a7d8ad" stroke-width="4" fill="none" stroke-linecap="round"/><text x="50" y="88" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🌾</text></svg>' },
-            { id: 'revilla', name: 'Bong', tint: 'hue-rotate(15deg) contrast(1.05)', glow: '#ec4899', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23152142"/><circle cx="50" cy="42" r="24" fill="%23e5c8a2"/><circle cx="38" cy="38" r="5" fill="%23131b2f"/><circle cx="62" cy="38" r="5" fill="%23131b2f"/><path d="M34 55c6 8 24 8 30 0" stroke="%23131b2f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M50 26c6 0 8 8 8 12" stroke="%23f4c9b5" stroke-width="4" fill="none" stroke-linecap="round"/><text x="50" y="88" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">🕺</text></svg>' },
-            { id: 'bonggo', name: 'Bong Go', tint: 'brightness(1.05) saturate(0.95)', glow: '#06b6d4', img: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23091d34"/><circle cx="50" cy="42" r="24" fill="%23e3c5a6"/><circle cx="38" cy="38" r="5" fill="%230a1620"/><circle cx="62" cy="38" r="5" fill="%230a1620"/><path d="M34 55c6 8 24 8 30 0" stroke="%230a1620" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="30" y="68" width="40" height="16" rx="6" fill="%23162f44"/><text x="50" y="86" font-family="sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">📱</text></svg>' }
+            { id: 'sara', name: 'Inday S.', tint: 'contrast(1.2) hue-rotate(-5deg)', glow: '#22c55e' },
+            { id: 'bato', name: 'Bato', tint: 'contrast(1.15) brightness(1.05)', glow: '#ef4444' },
+            { id: 'robin', name: 'Robin', tint: 'sepia(0.15) saturate(1.2)', glow: '#eab308' },
+            { id: 'risa', name: 'Risa', tint: 'brightness(1.02) saturate(1.05)', glow: '#a855f7' },
+            { id: 'trillanes', name: 'Trillanes', tint: 'contrast(1.15) grayscale(0.1)', glow: '#3b82f6' },
+            { id: 'villar_c', name: 'Cynthia', tint: 'saturate(1.25)', glow: '#10b981' },
+            { id: 'revilla', name: 'Bong', tint: 'hue-rotate(15deg) contrast(1.05)', glow: '#ec4899' },
+            { id: 'bonggo', name: 'Bong Go', tint: 'brightness(1.05) saturate(0.95)', glow: '#06b6d4' }
         ];
 
         const itemList = [
@@ -311,8 +311,6 @@
         let stampsArray = [];
         let currentActiveQuote = "🎲 TAP ME OR PRESS GAVEL TO ROLL QUOTE 🎲";
         let isDiceRolling = false;
-        
-        const imageCache = {};
 
         function processLiveFrameLoop() {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -365,15 +363,10 @@
                     liveCtx.lineWidth = 2;
                     liveCtx.strokeRect(liveCanvas.width - 125, liveCanvas.height - 155, 105, 135);
                     
-                    const cachedImg = imageCache[selectedSenator.id];
-                    if (cachedImg && cachedImg.complete) {
-                        liveCtx.drawImage(cachedImg, liveCanvas.width - 117, liveCanvas.height - 147, 90, 100);
-                    }
-                    
                     liveCtx.font = "bold 10px sans-serif";
                     liveCtx.fillStyle = "#dcaf64";
                     liveCtx.textAlign = "center";
-                    liveCtx.fillText(selectedSenator.name.toUpperCase(), liveCanvas.width - 72, liveCanvas.height - 32);
+                    liveCtx.fillText(selectedSenator.name.toUpperCase(), liveCanvas.width - 72, liveCanvas.height - 82);
                     liveCtx.restore();
                 }
             }
@@ -451,16 +444,11 @@
         function initSelectors() {
             selectorContainer.innerHTML = "";
             senatorList.forEach(sen => {
-                const imgObj = new Image();
-                imgObj.src = sen.img;
-                imageCache[sen.id] = imgObj;
-
                 const card = document.createElement('div');
                 card.id = `sen-card-${sen.id}`;
-                card.className = "senator-avatar-card flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden flex flex-col items-center justify-between cursor-pointer select-none relative";
+                card.className = "senator-avatar-card flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden flex flex-col items-center justify-center cursor-pointer select-none relative bg-gradient-to-b from-slate-800 to-slate-900";
                 card.innerHTML = `
-                    <img src="${sen.img}" class="w-full h-11 object-cover" alt="${sen.name}">
-                    <span class="text-[8px] font-bold tracking-tight text-amber-100/90 truncate w-full bg-black/70 py-0.5 text-center block z-10">${sen.name}</span>
+                    <span class="text-[10px] font-bold tracking-tight text-amber-100/90 text-center px-1">${sen.name}</span>
                 `;
                 card.addEventListener('click', () => {
                     applySenatorFilter(sen);
