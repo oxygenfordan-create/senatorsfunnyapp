@@ -166,13 +166,16 @@
                 <i data-lucide="ban" class="w-4 h-4"></i>
             </button>
 
-            <button id="capture-btn" class="gavel-btn w-14 h-14 rounded-full flex items-center justify-center" title="Paluin ang Gavel (Kumuha ng Larawan)" aria-label="Capture photo">
-                <div class="w-10 h-10 rounded-full border border-[#dcaf64]/20 flex items-center justify-center">
-                    <i data-lucide="gavel" class="w-4 h-4 text-[#dcaf64]"></i>
-                </div>
-            </button>
+            <div class="flex flex-col items-center gap-1">
+                <button id="capture-btn" class="gavel-btn w-14 h-14 rounded-full flex items-center justify-center" title="Capture photo and save it" aria-label="Capture photo">
+                    <div class="w-10 h-10 rounded-full border border-[#dcaf64]/20 flex items-center justify-center">
+                        <i data-lucide="camera" class="w-4 h-4 text-[#dcaf64]"></i>
+                    </div>
+                </button>
+                <span class="text-[8px] uppercase tracking-[0.2em] text-[#dcaf64]">Take Photo</span>
+            </div>
 
-            <button id="album-toggle-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-[#dcaf64] relative" title="Buksan ang Vault">
+            <button id="album-toggle-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-[#dcaf64] relative" title="Open photo vault">
                 <i data-lucide="folder-lock" class="w-4 h-4"></i>
                 <div id="album-badge" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 hidden"></div>
             </button>
